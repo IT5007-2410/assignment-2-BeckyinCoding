@@ -27,6 +27,7 @@ function Display(props) {
   return (
     <table className="bordered-table">
       <thead>
+        
         <tr>
 	  {/*Q3. Below table is just an example. Add more columns based on the traveller attributes you choose.*/}
           <th>ID</th>
