@@ -17,9 +17,19 @@ const initialTravellers = [
 
 function TravellerRow(props) {
   {/*Q3. Placeholder to initialize local variable based on traveller prop.*/}
+  const traveller = props.traveller;
   return (
     <tr>
       {/*Q3. Placeholder for rendering one row of a table with required traveller attribute values.*/}
+      {/* below placeholders are not affecting the html output, can move them. Below function displays is the key to render the table  */}
+      {/* <td>{traveller.id}</td>
+      <td>{traveller.name}</td>
+      <td>{traveller.IdentifyID}</td>
+      <td>{traveller.phone}</td>
+      <td>{traveller.email}</td>
+      <td>{traveller.nationality}</td>
+      <td>{traveller.seatNumber}</td>
+      <td>{traveller.bookingTime.toLocaleString()}</td> */}
     </tr>
   );
 }
@@ -39,11 +49,25 @@ function Display(props) {
           <th>Phone</th>
           <th>email</th>
           <th>nationality</th>
+          <th>Seat Number</th>
           <th>Booking Time</th>
         </tr>
       </thead>
       <tbody>
         {/*Q3. write code to call the JS variable defined at the top of this function to render table rows.*/}
+        {props.travellers.map(traveller => (
+          //<TravellerRow key={traveller.id} traveller={traveller} />
+          <tr key={traveller.id}>
+            <td>{traveller.id}</td>
+            <td>{traveller.name}</td>
+            <td>{traveller.IdentifyID}</td>
+            <td>{traveller.phone}</td>
+            <td>{traveller.email}</td>
+            <td>{traveller.nationality}</td>
+            <td>{traveller.seatNumber}</td>
+            <td>{traveller.bookingTime.toLocaleString()}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
@@ -179,7 +203,7 @@ class TicketToRide extends React.Component {
         {this.state.selector === 1 && <Homepage travellers={this.state.travellers}/>}
 
         {/*Q3. Code to call component that Displays Travellers.*/}
-              {/* {this.state.selector === 2 && <Display travellers={this.state.travellers} />}  */}
+        {this.state.selector === 2 && <Display travellers={this.state.travellers} />} 
         {/*Q4. Code to call the component that adds a traveller.*/}
         {/*Q5. Code to call the component that deletes a traveller based on a given attribute.*/}
           </div>
