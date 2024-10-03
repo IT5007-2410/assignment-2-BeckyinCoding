@@ -21,22 +21,22 @@ function TravellerRow(props) {
   return (
     <tr>
       {/*Q3. Placeholder for rendering one row of a table with required traveller attribute values.*/}
-      {/* below placeholders are not affecting the html output, can move them. Below function displays is the key to render the table  */}
-      {/* <td>{traveller.id}</td>
+      {/* below placeholders are not affecting the html output, can move them?. Below function displays is the key to render the table  */}
+      <td>{traveller.id}</td>
       <td>{traveller.name}</td>
       <td>{traveller.IdentifyID}</td>
       <td>{traveller.phone}</td>
       <td>{traveller.email}</td>
       <td>{traveller.nationality}</td>
       <td>{traveller.seatNumber}</td>
-      <td>{traveller.bookingTime.toLocaleString()}</td> */}
+      <td>{traveller.bookingTime.toLocaleString()}</td>
     </tr>
   );
 }
 
 function Display(props) {
-  
-    /*Q3. Write code to render rows of table, reach corresponding to one traveller. Make use of the TravellerRow function that draws one row.*/
+
+  /*Q3. Write code to render rows of table, reach corresponding to one traveller. Make use of the TravellerRow function that draws one row.*/
 
   return (
     <table className="bordered-table">
@@ -76,20 +76,75 @@ function Display(props) {
 class Add extends React.Component {
   constructor() {
     super();
+    this.state = {
+      name: '',
+      IdentifyID: '',
+      phone: '',
+      email: '',
+      nationality: '',
+      seatNumber: '',
+      bookingTime: ''
+    };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(e) {
     e.preventDefault();
     /*Q4. Fetch the passenger details from the add form and call bookTraveller()*/
+    const form = document.forms.addTraveller;
+    const newTraveller = {
+      id: Math.floor(Math.random() * 100),
+      // name: e.target.travellername.value, IdentifyID: e.target.travellerIdentifyID.value, phone: e.target.travellerphone.value, email: e.target.travelleremail.value
+      //name: form.name.value, IdentifyID: form.IdentifyID.value, phone: form.phone.value, email: form.email.value, bookingTime: new Date(),
+      name: this.state.name,
+      IdentifyID: this.state.IdentifyID,
+      phone: this.state.phone,
+      email: this.state.email,
+      nationality: this.state.nationality,
+      seatNumber: this.state.seatNumber,
+      bookingTime: this.state.bookingTime,
+    };
+
+    this.props.bookTraveller(newTraveller);
+    //form.name.value = ''; form.IdentifyID.value = ''; form.phone.value = ''; form.email.value = '';
+    this.setState({
+      name: '',
+      IdentifyID: '',
+      phone: '',
+      email: '',
+      nationality: '',
+      seatNumber: '',
+      bookingTime: ''});
   }
 
   render() {
     return (
       <form name="addTraveller" onSubmit={this.handleSubmit}>
         {/*Q4. Placeholder to enter passenger details. Below code is just an example.*/}
-        <input type="text" name="travellername" placeholder="Name" />
-        <button>Add</button>
+        {/* <input type="text" name="travellername" placeholder="Name" /> */}
+        <input id="travellername" name="travellername" type="text" placeholder="Name" value={this.state.name}
+          onChange={(e) => this.setState({ name: e.target.value })} />
+        {/* <input type = "text" name = "travellername" placeholder="Name" onChange={(e) => this.setState({name: e.target.value})}/> */}
+        {/* <input type="text" placeholder="IdentifyID" onChange={(e) => this.setState({ IdentifyID: e.target.value })} /> */}
+        <input type="text" placeholder="IdentifyID"
+          value={this.state.IdentifyID}
+          onChange={(e) => this.setState({ IdentifyID: e.target.value })} />
+        <input type="text" placeholder="Phone"
+          value={this.state.phone}
+          onChange={(e) => this.setState({ phone: e.target.value })} />
+        <input type="text" placeholder="Email"
+          value={this.state.email}
+          onChange={(e) => this.setState({ email: e.target.value })} />
+        <input type="text" placeholder="Nationality"
+          value={this.state.nationality}
+          onChange={(e) => this.setState({ nationality: e.target.value })} />
+        <input type="text" placeholder="Seat Number"
+          value={this.state.seatNumber}
+          onChange={(e) => this.setState({ seatNumber: e.target.value })} />
+        <input type="text" placeholder="Booking Time"
+          value={this.state.bookingTime}
+          onChange={(e) => this.setState({ bookingTime: e.target.value })} />
+        <button type="submit">Add</button>
       </form>
     );
   }
@@ -110,7 +165,7 @@ class Delete extends React.Component {
     return (
       <form name="deleteTraveller" onSubmit={this.handleSubmit}>
         {/*Q5. Placeholder form to enter information on which passenger's ticket needs to be deleted. Below code is just an example.*/}
-    <input type="text" name="travellername" placeholder="Name" />
+        <input type="text" name="travellername" placeholder="Name" />
         <button>Delete</button>
       </form>
     );
@@ -176,6 +231,13 @@ class TicketToRide extends React.Component {
 
   bookTraveller(passenger) {
         /*Q4. Write code to add a passenger to the traveller state variable.*/
+        this.setState((prevState) => {
+          const newId = prevState.travellers.length + 1;
+          const newPassenger = { ...passenger, id: newId }; // 新乘客的id为当前乘客列表长度 + 1
+          const updatedTravellers = [...prevState.travellers, newPassenger];
+          return { travellers: updatedTravellers };
+
+        });
   }
 
   deleteTraveller(passenger) {
@@ -192,9 +254,9 @@ class TicketToRide extends React.Component {
           <div>
       {/*Q2. Code for Navigation bar. Use basic buttons to create a nav bar. Use states to manage selection.*/}
           <button onClick = {() => this.setSelector(1)}>Homepage</button>
-          <button onClick = {() => this.setSelector(2)}>Display passenger</button>
-          <button onClick = {() => this.setSelector(3)}>Add passenger</button>
-          <button onClick = {() => this.setSelector(4)}>Delete passenger</button>
+          <button onClick = {() => this.setSelector(2)}>Display traveller</button>
+          <button onClick = {() => this.setSelector(3)}>Add traveller</button>
+          <button onClick = {() => this.setSelector(4)}>Delete traveller</button>
           </div>
 
           <div>
@@ -203,8 +265,9 @@ class TicketToRide extends React.Component {
         {this.state.selector === 1 && <Homepage travellers={this.state.travellers}/>}
 
         {/*Q3. Code to call component that Displays Travellers.*/}
-        {this.state.selector === 2 && <Display travellers={this.state.travellers} />} 
+        {this.state.selector === 2 && <Display travellers={this.state.travellers}/>} 
         {/*Q4. Code to call the component that adds a traveller.*/}
+        {this.state.selector === 3 && <Add bookTraveller={this.bookTraveller}/>}
         {/*Q5. Code to call the component that deletes a traveller based on a given attribute.*/}
           </div>
       </div>
