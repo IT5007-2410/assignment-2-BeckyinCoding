@@ -77,13 +77,13 @@ class Add extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: '',
-      IdentifyID: '',
-      phone: '',
-      email: '',
-      nationality: '',
-      seatNumber: '',
-      bookingTime: ''
+      // name: '',
+      // IdentifyID: '',
+      // phone: '',
+      // email: '',
+      // nationality: '',
+      // seatNumber: '',
+      // bookingTime: ''
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -102,11 +102,13 @@ class Add extends React.Component {
       email: this.state.email,
       nationality: this.state.nationality,
       seatNumber: this.state.seatNumber,
-      bookingTime: this.state.bookingTime,
+      bookingTime: new Date(),
+      //bookingTime: this.state.bookingTime,
     };
 
     this.props.bookTraveller(newTraveller);
     //form.name.value = ''; form.IdentifyID.value = ''; form.phone.value = ''; form.email.value = '';
+    // for this state, this.props, parameters/properties need to be here, waiting for others to recall 
     this.setState({
       name: '',
       IdentifyID: '',
@@ -154,19 +156,38 @@ class Add extends React.Component {
 class Delete extends React.Component {
   constructor() {
     super();
+    //this.state no need to be here, because the state is not used in this component
+    // this.state = {
+    //   name: '',
+    //   IdentifyID: '',
+    //   phone: '',
+    //   email: '',
+    //   nationality: '',
+    //   seatNumber: '',
+    //   bookingTime: ''
+    // };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
   handleSubmit(e) {
     e.preventDefault();
     /*Q5. Fetch the passenger details from the deletion form and call deleteTraveller()*/
-  }
+    const form = document.forms.deleteTraveller;
+    console.log(form.travellername.value);
+    // code to deleteTraveller
+    //call the function detele(passenger) 
+    //deleteTraveller(form.travellername.value); this is the child class, need to call deleteTraveller from the parent class (in the class TicketToRide) down to the child class
+    this.props.delfunction(form.travellername.value);} // this.props.delfunction is the function deleteTraveller in the parent class, inside is the data you pass 
+
+  
 
   render() {
     return (
       <form name="deleteTraveller" onSubmit={this.handleSubmit}>
         {/*Q5. Placeholder form to enter information on which passenger's ticket needs to be deleted. Below code is just an example.*/}
+        {/* <input id="travellername" name="travellername" type="text" placeholder="Name" value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} /> */}
         <input type="text" name="travellername" placeholder="Name" />
-        <button>Delete</button>
+        <button type="submit">Delete</button>
       </form>
     );
   }
@@ -177,7 +198,7 @@ class Homepage extends React.Component {
     super();
     }
   render(){
-    const totalSeats = 8;
+    const totalSeats = 10;
     const bookedSeats = this.props.travellers.length;
     const freeSeats = totalSeats - bookedSeats;
     
@@ -218,9 +239,13 @@ class TicketToRide extends React.Component {
     this.setState({selector: value});
   }
 
-
+  // the data load the first time 
   componentDidMount() {
     this.loadData();
+  }
+
+  componentDidUpdate(){
+    console.log("componentDidUpdate()",this.state.travellers)
   }
 
   loadData() {
@@ -242,6 +267,15 @@ class TicketToRide extends React.Component {
 
   deleteTraveller(passenger) {
       /*Q5. Write code to delete a passenger from the traveller state variable.*/
+    console.log("deleteTraveller:", passenger);
+    // actual deletion
+    var newlist = []
+    this.state.travellers.forEach(element => {
+      if (element.name != passenger) {newlist.push(element)}
+    });
+    console.log(newlist);
+    this.setState({travellers:newlist})
+    console.log(this.state.travellers);
   }
 
 
@@ -269,6 +303,8 @@ class TicketToRide extends React.Component {
         {/*Q4. Code to call the component that adds a traveller.*/}
         {this.state.selector === 3 && <Add bookTraveller={this.bookTraveller}/>}
         {/*Q5. Code to call the component that deletes a traveller based on a given attribute.*/}
+        {this.state.selector === 4 && <Delete delfunction={this.deleteTraveller}/>}
+        {/* <Delete delfunction={this.deleteTraveller}/> */}
           </div>
       </div>
     );
