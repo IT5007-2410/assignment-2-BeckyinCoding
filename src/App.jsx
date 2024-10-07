@@ -206,23 +206,66 @@ class Homepage extends React.Component {
     const seatmap = [];
     for (let i = 0; i < totalSeats; i++) {
       if (i < bookedSeats){
-        seatmap.push(<div key={i} style={{backgroundColor: 'grey', width: '50px', height: '50px', display: 'line-block'}}></div>);
+        seatmap.push(
+          <div 
+            key={i} 
+            style={{
+              backgroundColor: 'grey', 
+              width: '50px', 
+              height: '50px', 
+              display: 'inline-block', 
+              margin: '5px'
+            }}>
+          </div>
+        );
       } else {
-          seatmap.push(<div key={i} style={{backgroundColor: 'green', width: '50px', height: '50px', display: 'line-block'}}></div>);
+        seatmap.push(
+          <div 
+            key={i} 
+            style={{
+              backgroundColor: 'green', 
+              width: '50px', 
+              height: '50px', 
+              display: 'inline-block', 
+              margin: '5px'
+            }}>
+          </div>
+        );
       }
-  }
+    }
+  //   for (let i = 0; i < totalSeats; i++) {
+  //     if (i < bookedSeats){
+  //       seatmap.push(<div key={i} style={{backgroundColor: 'grey', width: '50px', height: '50px', display: 'line-block'}}></div>);
+  //     } else {
+  //         seatmap.push(<div key={i} style={{backgroundColor: 'green', width: '50px', height: '50px', display: 'line-block'}}></div>);
+  //     }
+  // }
     
     return (
       
         //{/*Q2. Placeholder for Homepage code that shows free seats visually.*/}
-      <div>
-          <h2>Seats Availability</h2>
-          <div>{seatmap}</div>
-          <p>{'Total Seats: ${totalSeats}, Free Seats: ${freeSeats}'}</p>
+        <div>
+        <h2>Seats Availability</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '260px' }}>
+          {seatmap}
+        </div>
+        <p>{`Total Seats: ${totalSeats}, Free Seats: ${freeSeats}`}</p>
       </div>
     );
   }
 }
+
+
+
+
+        //       <div>
+//           <h2>Seats Availability</h2>
+//           <div>{seatmap}</div>
+//           <p>{'Total Seats: ${totalSeats}, Free Seats: ${freeSeats}'}</p>
+//       </div>
+//     );
+//   }
+// }
 
 
 class TicketToRide extends React.Component {
