@@ -56,17 +56,16 @@ function Display(props) {
       <tbody>
         {/*Q3. write code to call the JS variable defined at the top of this function to render table rows.*/}
         {props.travellers.map(traveller => (
-          //<TravellerRow key={traveller.id} traveller={traveller} />
-          <tr key={traveller.id}>
-            <td>{traveller.id}</td>
-            <td>{traveller.name}</td>
-            <td>{traveller.IdentifyID}</td>
-            <td>{traveller.phone}</td>
-            <td>{traveller.email}</td>
-            <td>{traveller.nationality}</td>
-            <td>{traveller.seatNumber}</td>
-            <td>{traveller.bookingTime.toLocaleString()}</td>
-          </tr>
+          <TravellerRow key={traveller.id} traveller={traveller} />
+          // <tr key={traveller.id}>
+          //   <td>{traveller.id}</td>
+          //   <td>{traveller.name}</td>
+          //   <td>{traveller.IdentifyID}</td>
+          //   <td>{traveller.phone}</td>
+          //   <td>{traveller.email}</td>
+          //   <td>{traveller.nationality}</td>
+          //   <td>{traveller.seatNumber}</td>
+          //   <td>{traveller.bookingTime.toLocaleString()}</td>
         ))}
       </tbody>
     </table>
@@ -143,9 +142,9 @@ class Add extends React.Component {
         <input type="text" placeholder="Seat Number"
           value={this.state.seatNumber}
           onChange={(e) => this.setState({ seatNumber: e.target.value })} />
-        <input type="text" placeholder="Booking Time"
+        {/* <input type="text" placeholder="Booking Time"
           value={this.state.bookingTime}
-          onChange={(e) => this.setState({ bookingTime: e.target.value })} />
+          onChange={(e) => this.setState({ bookingTime: e.target.value })} /> */}
         <button type="submit">Add</button>
       </form>
     );
@@ -156,16 +155,7 @@ class Add extends React.Component {
 class Delete extends React.Component {
   constructor() {
     super();
-    //this.state no need to be here, because the state is not used in this component
-    // this.state = {
-    //   name: '',
-    //   IdentifyID: '',
-    //   phone: '',
-    //   email: '',
-    //   nationality: '',
-    //   seatNumber: '',
-    //   bookingTime: ''
-    // };
+    this.state = {travellerID: '' };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -173,12 +163,17 @@ class Delete extends React.Component {
     e.preventDefault();
     /*Q5. Fetch the passenger details from the deletion form and call deleteTraveller()*/
     const form = document.forms.deleteTraveller;
-    console.log(form.travellername.value);
+    // console.log(form.travellername.value);
+
+    // use travellerID, not travellername or travellerIdentifyID
+    const travellerID = Number(form.travellerID.value); 
+    console.log("Deleting traveller with travellerID:", travellerID);
+
     // code to deleteTraveller
     //call the function detele(passenger) 
     //deleteTraveller(form.travellername.value); this is the child class, need to call deleteTraveller from the parent class (in the class TicketToRide) down to the child class
-    this.props.delfunction(form.travellername.value);} // this.props.delfunction is the function deleteTraveller in the parent class, inside is the data you pass 
-
+    //this.props.delfunction(form.travellername.value);} // this.props.delfunction is the function deleteTraveller in the parent class, inside is the data you pass 
+    this.props.delfunction(travellerID);}
   
 
   render() {
@@ -186,7 +181,9 @@ class Delete extends React.Component {
       <form name="deleteTraveller" onSubmit={this.handleSubmit}>
         {/*Q5. Placeholder form to enter information on which passenger's ticket needs to be deleted. Below code is just an example.*/}
         {/* <input id="travellername" name="travellername" type="text" placeholder="Name" value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} /> */}
-        <input type="text" name="travellername" placeholder="Name" />
+        {/* <input type="text" name="travellerIdentifyID" placeholder="IdentifyID" /> */}
+        <input type="number" name="travellerID" placeholder="Traveller ID" value={this.state.travellerID}
+          onChange={(e) => this.setState({ travellerID: e.target.value })} />
         <button type="submit">Delete</button>
       </form>
     );
@@ -196,9 +193,15 @@ class Delete extends React.Component {
 class Homepage extends React.Component {
   constructor() {
     super();
+    this.state = {
+      travellers: 0 
+    };
     }
+
+
   render(){
     const totalSeats = 10;
+    // const bookedSeats = this.state.travellers;
     const bookedSeats = this.props.travellers.length;
     const freeSeats = totalSeats - bookedSeats;
     
@@ -207,7 +210,7 @@ class Homepage extends React.Component {
     for (let i = 0; i < totalSeats; i++) {
       if (i < bookedSeats){
         seatmap.push(
-          <div 
+          <div
             key={i} 
             style={{
               backgroundColor: 'grey', 
@@ -233,13 +236,7 @@ class Homepage extends React.Component {
         );
       }
     }
-  //   for (let i = 0; i < totalSeats; i++) {
-  //     if (i < bookedSeats){
-  //       seatmap.push(<div key={i} style={{backgroundColor: 'grey', width: '50px', height: '50px', display: 'line-block'}}></div>);
-  //     } else {
-  //         seatmap.push(<div key={i} style={{backgroundColor: 'green', width: '50px', height: '50px', display: 'line-block'}}></div>);
-  //     }
-  // }
+
     
     return (
       
@@ -250,22 +247,12 @@ class Homepage extends React.Component {
           {seatmap}
         </div>
         <p>{`Total Seats: ${totalSeats}, Free Seats: ${freeSeats}`}</p>
+        {/* the button to add and remove traveller */}
       </div>
     );
   }
 }
 
-
-
-
-        //       <div>
-//           <h2>Seats Availability</h2>
-//           <div>{seatmap}</div>
-//           <p>{'Total Seats: ${totalSeats}, Free Seats: ${freeSeats}'}</p>
-//       </div>
-//     );
-//   }
-// }
 
 
 class TicketToRide extends React.Component {
@@ -298,6 +285,12 @@ class TicketToRide extends React.Component {
   }
 
   bookTraveller(passenger) {
+    //overflow check
+        if (this.state.travellers.length >= 10) {
+          alert("All seats are booked!");
+          return;
+        }
+
         /*Q4. Write code to add a passenger to the traveller state variable.*/
         this.setState((prevState) => {
           const newId = prevState.travellers.length + 1;
@@ -308,19 +301,49 @@ class TicketToRide extends React.Component {
         });
   }
 
-  deleteTraveller(passenger) {
-      /*Q5. Write code to delete a passenger from the traveller state variable.*/
-    console.log("deleteTraveller:", passenger);
-    // actual deletion
-    var newlist = []
-    this.state.travellers.forEach(element => {
-      if (element.name != passenger) {newlist.push(element)}
-    });
-    console.log(newlist);
-    this.setState({travellers:newlist})
-    console.log(this.state.travellers);
-  }
+// pass the travellerID to delete the traveller, deleteTraveller() inside parameter is the function in the parent class
+  deleteTraveller(travellerID) {
+    //underflow check 
+    if (this.state.travellers.length === 0) {
+      alert("No passenger to delete!");
+      return;
+    }
+    
+   
+    //const existingTraveller = this.state.travellers.some(t => t.name === passenger);
+   // const existingTraveller = this.state.travellers.some(t => t.IdentifyID === idToDelete);
+   const existingTraveller = this.state.travellers.some(t => t.id === travellerID);
 
+
+    if (!existingTraveller) {
+      alert("traveller is not found!");
+      return;
+    }
+
+      /*Q5. Write code to delete a passenger from the traveller state variable.*/
+    console.log("deleteTraveller:", travellerID);
+    // actual deletion
+    // Use filter to remove the traveller by IdentifyID
+    const updatedTravellers = this.state.travellers.filter(t => t.id !== travellerID);
+    
+    // Update the state with the new traveller list
+    this.setState({ travellers: updatedTravellers }, () => {
+      console.log("Updated travellers list after deletion:", this.state.travellers);
+    });
+}
+  // the following code logic is used to delte the passenger by name, but name maybe duplicated 
+  //   var newlist = []
+  //   this.state.travellers.forEach(element => {
+  //     if (element.name != passenger) {newlist.push(element)}
+  //   });
+  //   console.log(newlist);
+  //   this.setState({travellers:newlist})
+  //   console.log(this.state.travellers);
+  // }
+
+  // setSelector(value){
+  //   this.setState({selector: value});
+  // }
 
 
   // render the component based on the selector value set by the user 
